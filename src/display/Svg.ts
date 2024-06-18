@@ -1,10 +1,12 @@
 import Sprite from "./Sprite";
 
 export default class Svg extends Sprite {
-  constructor(id, passedCode) {
+  code: string;
+  type: string;
+  constructor(id: string, passedCode: string) {
     super(id);
-    const uniqueID = id.toString().replace(/\./g, "-");
-    this.typeof = "SVG";
+    const uniqueID = id.replace(/\./g, "-");
+    this.type = "SVG";
     this.code = passedCode.replace(/^.*<svg/, "<svg");
     this.code = this.code.replace(/<!-.*->/, "");
     this.code = this.code.replace(/http/g, "https");
@@ -18,17 +20,19 @@ export default class Svg extends Sprite {
       4. adding some unique css keys to the css file. It is looking illustrator specific css, format as follows, '\.st\d+'
      */
     const temp = RegExp(/viewbox="([\d\s.]*)"/i).exec(this.code);
-    const part = temp[1].split(" ");
-    this.width = parseInt(part[2], 10);
-    this.height = parseInt(part[3], 10);
-    this.code = this.code.replace(
-      /viewbox/,
-      'width="100%" height="100%" viewbox'
-    );
+    if (temp) {
+      const part = temp[1].split(" ");
+      this.width = parseInt(part[2], 10);
+      this.height = parseInt(part[3], 10);
+      this.code = this.code.replace(
+        /viewbox/,
+        'width="100%" height="100%" viewbox'
+      );
+    }
     this.div.innerHTML = this.code;
   }
 
-  set palette(args) {
+  set palette(args: string[]) {
     const pal = this.palette;
     for (let i = 0; i < args.length; i++) {
       /* istanbul ignore else */
@@ -37,11 +41,5 @@ export default class Svg extends Sprite {
       }
     }
     this.div.innerHTML = this.code;
-  }
-
-  get palette() {
-    const pat = new RegExp(/#[a-zA-Z0-9]{6}/gi);
-    const out = this.code.match(pat);
-    return out;
   }
 }
