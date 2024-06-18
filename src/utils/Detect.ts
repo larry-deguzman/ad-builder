@@ -1,11 +1,19 @@
-/**
- * Detect Object
- */
+type Position = {
+  x?: number;
+  y?: number;
+};
+
 export default {
   mouse: {
-    coordinates: (event) => {
-      const position = {};
-      // if (!e) var e = window.event;
+    coordinates: (event: {
+      type: string | string[];
+      originalEvent: { touches: any[]; changedTouches: any[] };
+      pageX: number | undefined;
+      pageY: number | undefined;
+      clientX: number;
+      clientY: number;
+    }) => {
+      const position: Position = {};
       if (event.type.indexOf("touch") !== -1) {
         const touch =
           event.originalEvent.touches[0] ||
