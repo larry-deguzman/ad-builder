@@ -1,0 +1,204 @@
+set rotation(a) {
+    this.div.style[this.transformer] = this.setTransformProperty(
+      this,
+      "rotate",
+      "deg",
+      a
+    );
+  }
+
+  get rotation() {
+    return this.getTransformProperty(this.div, "rotate");
+  }
+
+  set rotationX(a) {
+    this.div.style[this.transformer] = this.setTransformProperty(
+      this,
+      "rotateX",
+      "deg",
+      a
+    );
+  }
+
+  get rotationX() {
+    return this.getTransformProperty(this.div, "rotateX");
+  }
+
+  set rotationY(a) {
+    this.div.style[this.transformer] = this.setTransformProperty(
+      this,
+      "rotateY",
+      "deg",
+      a
+    );
+  }
+
+  get rotationY() {
+    return this.getTransformProperty(this.div, "rotateY");
+  }
+
+  set rotationZ(a) {
+    this.div.style[this.transformer] = this.setTransformProperty(
+      this,
+      "rotateZ",
+      "deg",
+      a
+    );
+  }
+
+  get rotationZ() {
+    return this.getTransformProperty(this.div, "rotateZ");
+  }
+
+  set webScale(scale) {
+    this.div.style[this.transformer] = this.setTransformProperty(
+      this,
+      "scale",
+      "",
+      scale
+    );
+  }
+
+  get webScale() {
+    return this.getTransformProperty(this, "scale");
+  }
+
+
+  /* methods */
+  offset(win) {
+    const key =
+      this.browser === "safari" ? "webkitTransformOrigin" : "transformOrigin";
+    const offset = { x: 0, y: 0 };
+    const level = [this.div];
+    let i;
+    let hold = this.div.parentNode;
+    let savedScale = 1;
+    while (hold !== win.document.body) {
+      level.push(hold);
+      hold = hold.parentNode;
+    }
+
+    function getScale(mod) {
+      let scale = 1;
+      mod.split(" ").some((element) => {
+        if (element.indexOf("scale") !== -1) {
+          scale = parseFloat(element.replace(/scale\(|\)/g, ""));
+          return true;
+        }
+        return false;
+      });
+      return scale;
+    }
+
+    function getOrigin(mod) {
+      const origin =
+        mod[key] !== undefined ? mod[key].split(" ") : ["0%", "0%"];
+      let ret = { x: 0, y: 0 };
+      if (origin.length > 1) {
+        const [xo, yo] = origin;
+        ret = {
+          x:
+            xo.indexOf("%") !== -1
+              ? parseFloat(mod.width) * (parseFloat(xo) / 100)
+              : parseFloat(xo),
+          y:
+            yo.indexOf("%") !== -1
+              ? parseFloat(mod.height) * (parseFloat(yo) / 100)
+              : parseFloat(yo),
+        };
+      }
+      return ret;
+    }
+    for (i = level.length - 1; i >= 0; i--) {
+      const mod = win.getComputedStyle(level[i], null);
+      const scale = getScale(mod[this.transformer]);
+      const origin = getOrigin(mod);
+      const mcTemp = {
+        left: Number.isNaN(parseFloat(mod.left)) ? 0 : mod.left,
+        top: Number.isNaN(parseFloat(mod.top)) ? 0 : mod.top,
+        marginLeft: Number.isNaN(parseFloat(mod.marginLeft))
+          ? 0
+          : mod.marginLeft,
+        marginTop: Number.isNaN(parseFloat(mod.marginTop)) ? 0 : mod.marginTop,
+      };
+      const mc = {
+        x: parseFloat(mcTemp.left) + parseFloat(mcTemp.marginLeft),
+        y: parseFloat(mcTemp.top) + parseFloat(mcTemp.marginTop),
+      };
+      offset.x += (mc.x + origin.x - origin.x * scale) * savedScale;
+      offset.y += (mc.y + origin.y - origin.y * scale) * savedScale;
+      savedScale *= scale;
+    }
+    offset.scale = savedScale;
+    return offset;
+  }
+
+  fullscreen($scope, $state) {
+    const call = {
+      req: [
+        "requestFullscreen",
+        "mozRequestFullScreen",
+        "webkitRequestFullScreen",
+        "msRequestFullscreen",
+      ],
+      exit: [
+        "exitFullscreen",
+        "mozCancelFullScreen",
+        "webkitCancelFullScreen",
+        "msExitFullscreen",
+      ],
+    };
+    if ($state === true) {
+      call.req.some((element) => {
+        if (typeof this.div[element] === "function") {
+          this.div[element]();
+          return true;
+        }
+        return false;
+      });
+    } else {
+      call.exit.some((element) => {
+        if (typeof $scope.document[element] === "function") {
+          $scope.document[element]();
+          return true;
+        }
+        return false;
+      });
+    }
+    if ($scope.document.fullscreenElement === this.div) {
+      return "success";
+    }
+    return "fail";
+  }
+
+  getTransformProperty(mc, passedType) {
+    const a = mc.style[this.transformer].trim().split(" ");
+    const type = `${passedType}(`;
+    let ret = 0;
+    a.forEach((item) => {
+      if (item.indexOf(type) !== -1) {
+        ret = parseFloat(item.replace(/[^\d^.]*/g, ""));
+      }
+    });
+    return ret;
+  }
+
+  setTransformProperty(mc, passedType, mod, value) {
+    const a = mc.div.style[this.transformer].trim().split(" ");
+    let foundValue = false;
+    const temp = [];
+    const type = `${passedType}(`;
+    a.forEach((item) => {
+      if (item.indexOf(type) !== -1) {
+        temp.push(`${type}${value}${mod})`);
+        foundValue = true;
+      } else {
+        temp.push(item);
+      }
+    });
+    if (!foundValue) {
+      temp.push(`${type}${value}${mod})`);
+    }
+    return temp.join(" ").trim();
+  }
+}
