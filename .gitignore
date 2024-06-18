@@ -128,3 +128,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# Custom 
+src/base/*.js
+src/display/*.js
+src/math/*.js
+src/utils/*.js

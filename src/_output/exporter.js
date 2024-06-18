@@ -19,14 +19,11 @@ import Convert from "../math/Convert";
 import Create from "../utils/Create";
 import Detect from "../utils/Detect";
 import EventManager from "../utils/EventManager";
-// import GetQueryParams from "../utils/GetQueryParams";
 import Load from "../utils/Load";
 import UA from "../utils/UA";
 
-/**
- * SemVer RegExp from: https://semver.org/
- *
- */
+// import GetQueryParams from "../utils/GetQueryParams";
+
 export default function exporter() {
   if (typeof window.BB !== "object") {
     window.BB = {};
@@ -44,8 +41,8 @@ export default function exporter() {
     Create,
     Detect,
     EventManager,
-    // GetQueryParams,
     Load,
     UA,
   };
 }
+// GetQueryParams,

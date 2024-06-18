@@ -51,7 +51,7 @@ export default class Create {
     return mc;
   }
 
-  static iframe(config: object = {}): HTMLIFrameElement {
+  static iframe(config: { [index: string]: string } = {}): HTMLIFrameElement {
     const iframe = this.element("iframe") as HTMLIFrameElement;
     Object.keys(config).forEach((key) => {
       let value = config[key];
