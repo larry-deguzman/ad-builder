@@ -1,11 +1,16 @@
 import Sprite from "./Sprite";
 
 export default class InvisibleButton extends Sprite {
-  constructor(width, height, id, test = false) {
+  constructor(
+    width: number,
+    height: number,
+    id: string,
+    test: boolean = false
+  ) {
     super(id);
     this.width = width;
     this.height = height;
-    this.buttonMode = true;
+    this.buttonMode = "pointer";
     this.backgroundColor = `rgba(0, 255, 255, ${test ? 0.5 : 0})`;
     this.div.innerHTML = test ? id : "";
   }

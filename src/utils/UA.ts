@@ -1,36 +1,26 @@
 /* eslint vars-on-top: 0, new-cap: 0, no-use-before-define: 0 */
-/**
- * User Agent Detection - UA
- *     var env = UA;
- *     env.browser;
- *     env.os;
- *     env.flash;
- *     env.isHtml5Supported;
- *     env.html;
- *
- * @class UA
- */
+
+type Browser = {
+  name: string;
+  version: number;
+};
+
 export default class UA {
-  static getVersion(result) {
-    let ver = 0;
+  static getVersion(result: string[] | null): number {
+    let ver: number = 0;
     if (result && result[1]) {
-      ver = result[1].replace(/_/g, ".");
+      ver = parseInt(result[1].replace(/_/g, "."), 10);
     }
     return ver;
   }
 
-  /**
-   * Detect current OS
-   * @function detectOS
-   * @returns {Object} {name: string, version: number}
-   */
-  static detectOS(argUserAgent) {
+  static detectOS(argUserAgent: string | null): Browser {
     // Let's allow this special function to have more complexity than normal
     /* jshint maxcomplexity:false */
-    let os = "other";
-    let ver = 0;
-    let tmp;
-    const userAgent = argUserAgent || navigator.userAgent.toString();
+    let os: string = "other";
+    let ver: number = 0;
+    let tmp: RegExpExecArray | null;
+    const userAgent: string = argUserAgent || navigator.userAgent.toString();
 
     if (/windows|win32/i.test(userAgent) && !/windows phone/i.test(userAgent)) {
       os = "windows";
@@ -63,51 +53,33 @@ export default class UA {
 
     return {
       name: os,
-      version: parseInt(ver, 10),
+      version: ver,
     };
   }
 
-  /**
-   * Detect Mobiles
-   * @function checkMobile
-   * @returns {Boolean}
-   */
-  static checkMobile(userAgentAtt) {
-    const userAgent = userAgentAtt || navigator.userAgent.toLowerCase();
-    const ismobile =
+  static checkMobileTabletDesktop(userAgentAtt: string | null): string {
+    let ret: string = "desktop";
+    const userAgent: string = userAgentAtt || navigator.userAgent.toLowerCase();
+    const isMobile: boolean =
       /iphone|ipod|mobile|phone|blackberry|opera|mini|windows\sce|palm|iemobile/i.test(
         userAgent
       ) && !/ipad/i.test(userAgent);
-
-    return ismobile;
-  }
-
-  /**
-   * Detect Tablets
-   * @function checkTablet
-   * @returns {Boolean}
-   */
-  static checkTablet(userAgentAtt) {
-    const userAgent = userAgentAtt || navigator.userAgent.toLowerCase();
-    const istablet =
+    const isTablet: boolean =
       (/android|playbook|tablet|kindle|silk/i.test(userAgent) &&
         !/mobile/i.test(userAgent)) ||
       /ipad/i.test(userAgent);
 
-    return istablet;
+    if (isMobile) {
+      ret = "mobile";
+    } else if (isTablet) {
+      ret = "tablet";
+    }
+    return ret;
   }
 
-  /**
-   * Identifies the browser in use.
-   * In case the browser is being used, returns the browser version, it returns 0 otherwise.
-   * @function checkBrowser
-   * @param {String} str navigator.userAgent.toString()
-   * @param {String} regex Regex used to identify a specific browser version
-   * @returns {Number} Browser version or 0
-   */
-  static checkBrowser(str, regex) {
-    let version = 0;
-    let m;
+  static checkBrowser(str: string, regex: RegExp): number {
+    let version: number = 0;
+    let m: RegExpMatchArray | null;
 
     /* istanbul ignore else  */
     if (typeof str === "string") {
@@ -120,8 +92,8 @@ export default class UA {
     return version;
   }
 
-  static numberific(string) {
-    const m = string.match(/[0-9]+.?[0-9]*/);
+  static numberific(string: string): number {
+    const m: RegExpMatchArray | null = string.match(/[0-9]+.?[0-9]*/);
     /* istanbul ignore else */
     if (m && m[0]) {
       return parseFloat(m[0]);
@@ -130,23 +102,15 @@ export default class UA {
     return 0;
   }
 
-  /**
-   * Detects if Canvas is supported by browser
-   * @function detectCanvas
-   * @returns {Boolean}
-   */
-  static detectCanvas() {
-    const element = document.createElement("canvas");
-    const test = !!(element.getContext && element.getContext("2d"));
+  static detectCanvas(): boolean {
+    const element: HTMLCanvasElement = document.createElement("canvas");
+    const test: boolean = !!(element.getContext && element.getContext("2d"));
     return test;
   }
 
-  /**
-   * Detects if Drag and Drop is supported by browser
-   * @function detectDragDrop
-   * @returns {Boolean}
-   */
-  static detectDragDrop(div = document.createElement("div")) {
+  static detectDragDrop(
+    div: HTMLDivElement = document.createElement("div")
+  ): boolean {
     /* istanbul ignore else */
     if ("draggable" in div) {
       return true;
@@ -157,30 +121,24 @@ export default class UA {
     return false;
   }
 
-  /**
-   * Detects if canvas and text on canvas is supported by browser
-   * @function detectCanvasText
-   * @returns {Boolean}
-   */
-  static detectCanvasText() {
-    const element = document.createElement("canvas");
+  static detectCanvasText(): boolean {
+    const element: HTMLCanvasElement = document.createElement("canvas");
     const test = !!(
-      this.canvas && typeof element.getContext("2d").fillText === "function"
+      element !== null &&
+      this.canvas &&
+      typeof element.getContext("2d")?.fillText === "function"
     );
 
     return test;
   }
 
-  /**
-   * Detects if playing audio is supported by browser
-   * @function detectAudio
-   * @returns {Boolean}
-   */
-  static detectAudio(element = document.createElement("audio")) {
-    let test = false;
-    let ogg = false;
-    let mp3 = false;
-    let wav = false;
+  static detectAudio(
+    element: HTMLAudioElement = document.createElement("audio")
+  ): boolean {
+    let test: boolean = false;
+    let ogg: boolean | string = false;
+    let mp3: boolean | string = false;
+    let wav: boolean | string = false;
 
     /* istanbul ignore if */
     if ("canPlayType" in element) {
@@ -196,18 +154,15 @@ export default class UA {
     return test;
   }
 
-  /**
-   * Detects if native video playing is supported by browser
-   * @function detectVideo
-   * @returns {Boolean}
-   */
-  static detectVideo(element = document.createElement("video")) {
+  static detectVideo(
+    element: HTMLVideoElement = document.createElement("video")
+  ): boolean {
     let test = false;
-    let ogg = false;
-    let h264 = false;
-    let h264B = false;
-    let h264C = false;
-    let webm = false;
+    let ogg: boolean | string = false;
+    let h264: boolean | string = false;
+    let h264B: boolean | string = false;
+    let h264C: boolean | string = false;
+    let webm: boolean | string = false;
 
     /* istanbul ignore next */
     if ("canPlayType" in element) {
@@ -240,72 +195,72 @@ export default class UA {
     return test;
   }
 
-  static get userAgent() {
+  static get userAgent(): string {
     return navigator.userAgent.toString();
   }
 
-  static get IE() {
+  static get IE(): number {
     return this.checkBrowser(
       this.userAgent,
       /MSIE ([^;]*)|Trident.*; rv:([0-9.]+)/
     );
   }
 
-  static get edge() {
+  static get edge(): number {
     return this.checkBrowser(this.userAgent, /Edge\/([0-9.]+)/);
   }
 
-  static get firefox() {
+  static get firefox(): number {
     return this.checkBrowser(this.userAgent, /Firefox\/([0-9.]+)/);
   }
 
-  static get safari() {
+  static get safari(): number {
     return this.checkBrowser(this.userAgent, /Version\/([0-9.]+)\s?Safari/);
   }
 
-  static get chrome() {
+  static get chrome(): number {
     return this.checkBrowser(this.userAgent, /Chrome\/([0-9.]+)/);
   }
 
-  static get webkit() {
+  static get webkit(): number {
     return this.checkBrowser(this.userAgent, /AppleWebKit\/([0-9.]+)/);
   }
 
-  static get OS() {
+  static get OS(): Browser {
     return this.detectOS(this.userAgent);
   }
 
   // static get flash() { return this.detectFlash(); }
-  static get isMobile() {
-    return this.checkMobile();
+  static get isMobile(): boolean {
+    return this.checkMobileTabletDesktop(null) === "mobile";
   }
 
-  static get isTablet() {
-    return this.checkTablet();
+  static get isTablet(): boolean {
+    return this.checkMobileTabletDesktop(null) === "tablet";
   }
 
   /* HTML5 Tests */
-  static get dragDrop() {
+  static get dragDrop(): boolean {
     return this.detectDragDrop();
   }
 
-  static get video() {
+  static get video(): boolean {
     return this.detectVideo();
   }
 
-  static get audio() {
+  static get audio(): boolean {
     return this.detectAudio();
   }
 
-  static get canvas() {
+  static get canvas(): boolean {
     return this.detectCanvas();
   }
 
-  static get canvasText() {
+  static get canvasText(): boolean {
     return this.detectCanvasText();
   }
 
-  static get isHtml5Supported() {
+  static get isHtml5Supported(): boolean | HTMLElement {
     return this.detectHTML5Supported(
       this.video,
       this.audio,
@@ -314,45 +269,42 @@ export default class UA {
     );
   }
 
-  static get currentBrowser() {
+  static get currentBrowser(): Browser {
     return this.detectBrowser();
   }
 
-  /**
-   * Detects browser
-   * @function detectBrowser
-   * @returns {Object} {name: string, version: number}
-   */
-  static detectBrowser() {
+  static detectBrowser(): Browser {
     /* istanbul ignore next */
-    this.browser_t = {
+    const browser: Browser = {
       name: "other",
       version: 0,
     };
     /* istanbul ignore next */
     if (this.IE) {
-      this.browser_t.name = "MSIE";
-      this.browser_t.version = this.IE;
+      browser.name = "MSIE";
+      browser.version = this.IE;
     } else if (this.edge) {
-      this.browser_t.name = "Edge";
-      this.browser_t.version = this.edge;
+      browser.name = "Edge";
+      browser.version = this.edge;
     } else if (this.firefox) {
-      this.browser_t.name = "FireFox";
-      this.browser_t.version = this.firefox;
+      browser.name = "FireFox";
+      browser.version = this.firefox;
     } else if (this.safari) {
-      this.browser_t.name = "Safari";
-      this.browser_t.version = this.safari;
+      browser.name = "Safari";
+      browser.version = this.safari;
     } else if (this.chrome) {
-      this.browser_t.name = "Chrome";
-      this.browser_t.version = this.chrome;
+      browser.name = "Chrome";
+      browser.version = this.chrome;
     } else if (this.webkit) {
-      this.browser_t.name = "WebKit";
-      this.browser_t.version = this.webkit;
+      browser.name = "WebKit";
+      browser.version = this.webkit;
     }
-    return this.browser_t;
+    return browser;
   }
 
-  static detectHTML5Supported(...check) {
+  static detectHTML5Supported(
+    ...check: HTMLElement[] | boolean[]
+  ): HTMLElement | boolean {
     // if any of the checks are false...it will retuen false
     // doing this for full coverage
     /* eslint arrow-body-style: 0 */
@@ -361,26 +313,26 @@ export default class UA {
     });
   }
 
-  static get browser() {
+  static get browser(): Browser {
     return this.currentBrowser;
   }
 
-  static get os() {
+  static get os(): Browser {
     return this.OS;
   }
 
   /**
    * Helper reference to document.documentElement
    */
-  static get html() {
+  static get html(): HTMLElement {
     return document.documentElement;
   }
 
-  static get ie() {
+  static get ie(): number {
     return this.IE;
   }
 
-  static get ATTRS() {
+  static get ATTRS(): { NAME: string } {
     return { NAME: "UA" };
   }
 }

@@ -2,14 +2,27 @@ import Sprite from "./Sprite";
 import Align from "./Align";
 
 export default class Apply {
-  static alignHelper(targetInit, referenceInit, typeInit) {
+  static alignHelper(
+    targetInit: Sprite,
+    referenceInit: Sprite,
+    typeInit: string
+  ) {
     let scale;
     let ret = {};
-    const contain = targetInit.parentObject === referenceInit;
+    const contain = targetInit.storage.parent === referenceInit;
     const reference = {
       x: contain ? 0 : referenceInit.x,
       y: contain ? 0 : referenceInit.y,
     };
+    const RI = {
+      width: parseInt(referenceInit.width, 10),
+      height: parseInt(referenceInit.height, 10),
+    };
+    const TI = {
+      width: parseInt(targetInit.width, 10),
+      height: parseInt(targetInit.height, 10),
+    };
+
     switch (typeInit) {
       case Align.TOP_LEFT:
         ret = {
@@ -19,72 +32,74 @@ export default class Apply {
         break;
       case Align.TOP_RIGHT:
         ret = {
-          x: referenceInit.width - targetInit.width + reference.x,
+          x: RI.width - TI.width + reference.x,
           y: reference.y,
         };
         break;
       case Align.BOTTOM_LEFT:
         ret = {
           x: reference.x,
-          y: referenceInit.height - targetInit.height + reference.y,
+          y: RI.height - TI.height + reference.y,
         };
         break;
       case Align.BOTTOM_RIGHT:
         ret = {
-          x: referenceInit.width - targetInit.width + reference.x,
-          y: referenceInit.height - targetInit.height + reference.y,
+          x: RI.width - TI.width + reference.x,
+          y: RI.height - TI.height + reference.y,
         };
         break;
       case Align.CENTER:
         ret = {
-          x: (referenceInit.width - targetInit.width) / 2 + reference.x,
-          y: (referenceInit.height - targetInit.height) / 2 + reference.y,
+          x: (RI.width - TI.width) / 2 + reference.x,
+          y: (RI.height - TI.height) / 2 + reference.y,
         };
         break;
       case Align.FILL:
         ret = {
           x: reference.x,
           y: reference.y,
-          width: referenceInit.width,
-          height: referenceInit.height,
+          width: RI.width,
+          height: RI.height,
         };
         break;
+      /*
       case Align.RATIO_SCALE_WIDTH:
       case Align.RATIO_SCALE_HEIGHT:
         scale =
           referenceInit[
-            typeInit === Align.RATIO_SCALE_WIDTH ? "width" : "height"
+            parseInt((typeInit === Align.RATIO_SCALE_WIDTH ? "width" : "height"), 10)
           ] /
           targetInit[typeInit === Align.RATIO_SCALE_WIDTH ? "width" : "height"];
         ret = {
-          width: scale * targetInit.width,
-          height: scale * targetInit.height,
+          width: scale * TI.width,
+          height: scale * TI.height,
         };
         break;
+        */
       case Align.TOP_CENTER:
       case Align.CENTER_TOP:
         ret = {
-          x: (referenceInit.width - targetInit.width) / 2 + reference.x,
+          x: (RI.width - TI.width) / 2 + reference.x,
           y: reference.y,
         };
         break;
       case Align.BOTTOM_CENTER:
       case Align.CENTER_BOTTOM:
         ret = {
-          x: (referenceInit.width - targetInit.width) / 2 + reference.x,
-          y: referenceInit.height - targetInit.height + reference.y,
+          x: (RI.width - TI.width) / 2 + reference.x,
+          y: RI.height - TI.height + reference.y,
         };
         break;
       case Align.CENTER_LEFT:
         ret = {
           x: reference.x,
-          y: (referenceInit.height - targetInit.height) / 2 + reference.y,
+          y: (RI.height - TI.height) / 2 + reference.y,
         };
         break;
       case Align.CENTER_RIGHT:
         ret = {
-          x: referenceInit.width - targetInit.width + reference.x,
-          y: (referenceInit.height - targetInit.height) / 2 + reference.y,
+          x: RI.width - TI.width + reference.x,
+          y: (RI.height - TI.height) / 2 + reference.y,
         };
         break;
       default:
@@ -99,15 +114,15 @@ export default class Apply {
     return ret;
   }
 
-  static align(target, reference, position = "", apply = true) {
+  static align(target: Sprite, reference: Sprite, position = "", apply = true) {
     // let i;
     let tempProps = {};
     const hold = new Sprite("hold");
-    const props = ["x", "y", "width", "height"];
-    props.forEach((value) => {
-      hold[value] = target[value];
-    });
-    /* istanbul ignore else */
+    hold.x = target.x;
+    hold.y = target.y;
+    hold.width = target.width;
+    hold.height = target.height;
+
     if (typeof position === "string") {
       if (apply) {
         tempProps = Apply.alignHelper(target, reference, position);
@@ -121,26 +136,14 @@ export default class Apply {
     };
   }
 
-  static firstChildId(sprite, id) {
-    const { firstChild } = sprite.div;
-    firstChild.id = id;
-    return sprite;
-  }
-
-  static properties(sprite, obj) {
-    if (Array.isArray(sprite)) {
-      sprite.forEach((value, key) => {
-        Object.assign(sprite[key], obj);
-      });
-      return sprite;
-    }
+  static properties(sprite: Sprite, obj: object) {
     return Object.assign(sprite, obj);
   }
 
-  static center(sprite, reference) {
+  static center(sprite: Sprite, reference: Sprite) {
     this.properties(sprite, {
-      x: (reference.width - sprite.width) / 2,
-      y: (reference.height - sprite.height) / 2,
+      x: (parseInt(reference.width, 10) - parseInt(sprite.width, 10)) / 2,
+      y: (parseInt(reference.height, 10) - parseInt(sprite.height, 10)) / 2,
     });
     return sprite;
   }

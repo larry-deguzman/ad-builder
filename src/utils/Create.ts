@@ -1,5 +1,17 @@
+type GridProperties = {
+  width: number;
+  height: number;
+};
+
+type ArrayPoint = Point[];
+
+type Point = {
+  x: number;
+  y: number;
+};
+
 export default class Create {
-  static isElement(element) {
+  static isElement(element: HTMLElement | null): boolean {
     if (typeof HTMLElement === "object") {
       return element instanceof HTMLElement;
     }
@@ -15,11 +27,15 @@ export default class Create {
     return false;
   }
 
-  static element(a) {
+  static element(
+    a: string
+  ): HTMLElement | HTMLIFrameElement | HTMLImageElement {
     return document.createElement(a);
   }
 
-  static div(passedId = `act_us_${Math.random()}`.replace(".", "_")) {
+  static div(
+    passedId: string = `act_us_${Math.random()}`.replace(".", "_")
+  ): HTMLDivElement {
     const id = passedId;
     const mc = document.createElement("div");
     mc.setAttribute("id", id);
@@ -28,15 +44,15 @@ export default class Create {
     mc.style.height = "100px";
     mc.style.left = "0px";
     mc.style.top = "0px";
-    mc.style.opacity = 1;
+    mc.style.opacity = "1";
     mc.style.visibility = "visible";
     mc.style.overflow = "hidden";
     mc.style.position = "absolute";
     return mc;
   }
 
-  static iframe(config = {}) {
-    const iframe = this.element("iframe");
+  static iframe(config: object = {}): HTMLIFrameElement {
+    const iframe = this.element("iframe") as HTMLIFrameElement;
     Object.keys(config).forEach((key) => {
       let value = config[key];
 
@@ -48,23 +64,27 @@ export default class Create {
     return iframe;
   }
 
-  static image(src) {
-    const elem = document.createElement("img");
+  static image(src: string): HTMLImageElement {
+    const elem = Create.element("img") as HTMLImageElement;
     elem.setAttribute("src", src);
     elem.setAttribute("height", "100%");
     elem.setAttribute("width", "100%");
     return elem;
   }
 
-  static grid(bounds, cell, bleed = false) {
-    const ret = [];
+  static grid(
+    bounds: GridProperties,
+    cell: GridProperties,
+    bleed: boolean = false
+  ): ArrayPoint {
+    const ret: ArrayPoint = [];
     const count = {
       width: Math[bleed ? "ceil" : "floor"](bounds.width / cell.width),
       height: Math[bleed ? "ceil" : "floor"](bounds.height / cell.height),
     };
     for (let i = 0; i < count.height; i++) {
       for (let j = 0; j < count.width; j++) {
-        ret.push({ x: j * cell.width, y: i * cell.height });
+        ret.push({ x: j * cell.width, y: i * cell.height } as Point);
       }
     }
     return ret;
