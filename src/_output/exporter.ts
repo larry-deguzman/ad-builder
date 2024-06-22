@@ -23,11 +23,28 @@ import Load from "../utils/Load";
 import UA from "../utils/UA";
 
 // import GetQueryParams from "../utils/GetQueryParams";
-
-export default function exporter() {
-  if (typeof window.BB !== "object") {
-    window.BB = {};
+type BuildingBlocks = {
+  Base: typeof Base;
+  Align: typeof Align;
+  Apply: typeof Apply;
+  Border: typeof Border;
+  InvisibleButton: typeof InvisibleButton;
+  Remove: typeof Remove;
+  Sprite: typeof Sprite;
+  Svg: typeof Svg;
+  Convert: typeof Convert;
+  Create: typeof Create;
+  Detect: typeof Detect;
+  EventManager: typeof EventManager;
+  Load: typeof Load;
+  UA: typeof UA;
+};
+declare global {
+  interface Window {
+    BB: BuildingBlocks;
   }
+}
+export default function exporter() {
   window.BB = {
     Base,
     Align,
