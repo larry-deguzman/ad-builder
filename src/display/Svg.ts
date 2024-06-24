@@ -26,7 +26,7 @@ export default class Svg extends Sprite {
       this.height = parseInt(part[3], 10);
       this.code = this.code.replace(
         /viewbox/,
-        'width="100%" height="100%" viewbox'
+        'width="100%" height="100%" viewbox',
       );
     }
     this.div.innerHTML = this.code;

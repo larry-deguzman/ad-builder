@@ -28,25 +28,18 @@ export default class Create {
   }
 
   static element(
-    a: string
+    a: string,
   ): HTMLElement | HTMLIFrameElement | HTMLImageElement {
     return document.createElement(a);
   }
 
   static div(
-    passedId: string = `act_us_${Math.random()}`.replace(".", "_")
+    $id: string = `act_us_${Math.random()}`.replace(".", "_"),
   ): HTMLDivElement {
-    const id = passedId;
+    const id = $id;
     const mc = document.createElement("div");
     mc.setAttribute("id", id);
     // mc.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-    mc.style.width = "100px";
-    mc.style.height = "100px";
-    mc.style.left = "0px";
-    mc.style.top = "0px";
-    mc.style.opacity = "1";
-    mc.style.visibility = "visible";
-    mc.style.overflow = "hidden";
     mc.style.position = "absolute";
     return mc;
   }
@@ -75,7 +68,7 @@ export default class Create {
   static grid(
     bounds: GridProperties,
     cell: GridProperties,
-    bleed: boolean = false
+    bleed: boolean = false,
   ): ArrayPoint {
     const ret: ArrayPoint = [];
     const count = {

@@ -15,6 +15,7 @@ import InvisibleButton from "../display/InvisibleButton";
 import Remove from "../display/Remove";
 import Sprite from "../display/Sprite";
 import Svg from "../display/Svg";
+import Textfield from "../display/Textfield";
 import Convert from "../math/Convert";
 import Create from "../utils/Create";
 import Detect from "../utils/Detect";
@@ -32,6 +33,7 @@ type BuildingBlocks = {
   Remove: typeof Remove;
   Sprite: typeof Sprite;
   Svg: typeof Svg;
+  Textfield: typeof Textfield;
   Convert: typeof Convert;
   Create: typeof Create;
   Detect: typeof Detect;
@@ -54,6 +56,7 @@ export default function exporter() {
     Remove,
     Sprite,
     Svg,
+    Textfield,
     Convert,
     Create,
     Detect,

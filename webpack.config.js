@@ -1,20 +1,32 @@
 const fs = require("fs");
 const path = require("path");
+const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const packageObject = JSON.parse(fs.readFileSync("package.json"));
 const version = packageObject.version;
 
 module.exports = (env, options) => {
-  console.log("env", env);
   console.log("options", options);
   const middleArea = options.mode === "development" ? "" : `.${version}`;
   const config = {
-    entry: "./_temp/_output/exports.js", // Adjust this entry point as needed
+    entry:
+      options.env.options === "local"
+        ? "./public/htmlLoader.js"
+        : "./_temp/_output/exports.js", // Adjust this entry point as needed
     output: {
       filename: `BB${middleArea}.js`,
       path: path.resolve(__dirname, "dist"),
+      publicPath: "/",
     },
+    mode: options.mode, // devlopment or production
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname, "public"),
+      },
+      hot: true,
+    },
+    plugins: [new webpack.HotModuleReplacementPlugin()],
     module: {
       rules: [
         {

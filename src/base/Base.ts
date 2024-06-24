@@ -5,9 +5,12 @@ export default class Base {
   static byId(element: string): HTMLElement | null {
     return document.getElementById(element);
   }
+  static traceLog: boolean = false;
 
   static trace(...args: MixedArray) {
-    console.log(...args);
+    if (this.traceLog) {
+      console.log(...args);
+    }
   }
 
   static isRetina(): boolean {

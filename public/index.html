@@ -1,38 +1,17 @@
 <!DOCTYPE html>
 <head>
     <title>Test File</title>
+    <script>
+        var clickTag = "https://yahoo.com";
+    </script>
     <script src="../dist/BB.js"></script>
     <body>
-        <script>
-            const {
-                Base,
-                Align,
-                Apply,
-                Border,
-                InvisibleButton,
-                Remove,
-                Sprite,
-                Svg,
-                Convert,
-                Create,
-                Detect,
-                EventManager,
-                Load,
-                UA,
-            } = BB;
-            var root = new Sprite('root');
-            root.x = 0;
-            root.y = 0;
-            root.width = 900;
-            root.height = 900;
-            root.backgroundColor = 'red';
-            root.addToBody();
-        </script>
-
-
-
+        <div id="items" style="display: none;">
+            <img id="title" src="./walk/title.jpg" />
+            <img id="dvd" src="./walk/dvd.png" />
+            <img id="clouds" src="./walk/clouds.jpg" />
+        </div>
+        <script src="./js/script.js"></script>
 
     </body>
-
-
 </html>

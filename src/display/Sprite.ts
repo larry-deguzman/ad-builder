@@ -1,5 +1,6 @@
 import UA from "../utils/UA";
 import Create from "../utils/Create";
+import Border from "./Border";
 
 interface Original {
   width: number;
@@ -13,6 +14,7 @@ type Scale = {
 export default class Sprite {
   storage: any;
   div: HTMLElement;
+  type: string = "sprite";
 
   constructor($id: string) {
     const transforms: { [key: string]: string } = {
@@ -46,9 +48,15 @@ export default class Sprite {
     }
   }
 
-  addChild(child: Sprite): Sprite {
-    child.storage.parent = this;
-    this.storage.div.appendChild(child.storage.div);
+  addChild(child: Sprite | Border): Sprite | Border {
+    if (child instanceof Border) {
+      child.parent = this;
+      this.storage.div.appendChild(child.div);
+      child.update(this.width, this.height);
+    } else if (child instanceof Sprite) {
+      this.storage.parent = this;
+      this.storage.div.appendChild(child.div);
+    }
     return child;
   }
 
@@ -62,7 +70,7 @@ export default class Sprite {
   removeImage(): void {
     this.storage.div.innerHTML = "";
   }
-
+  // checked
   image(img: HTMLImageElement): void {
     const elem = Create.element("img");
     elem.setAttribute("src", img.src);
@@ -163,13 +171,14 @@ export default class Sprite {
   get og(): Original {
     return this.storage.originalSize;
   }
-
+  // checked
   set og(obj: Original) {
     this.storage.originalSize = obj;
   }
 
   set style(styles: { [key: string]: string | number }) {
-    Object.keys(styles).forEach((key: string, value: string | number) => {
+    Object.keys(styles).forEach((key: string) => {
+      const value = styles[key];
       if (this.storage.div instanceof HTMLElement) {
         this.storage.div.style[key] = value as string | number;
       }
@@ -282,7 +291,7 @@ export default class Sprite {
   }
 
   get width(): string {
-    return this.storage.dic.style.width;
+    return this.storage.div.style.width;
   }
 
   set height(a: number | string) {
@@ -384,6 +393,14 @@ export default class Sprite {
     const key =
       this.storage.browser === "safari" ? "webkitPerspective" : "perspective";
     return parseFloat(this.storage.div.style[key]);
+  }
+
+  set overflow(a: string) {
+    this.style = { overflow: a };
+  }
+
+  get overflow(): string {
+    return this.storage.div.style.overflow;
   }
 
   // set rotation(a) {
