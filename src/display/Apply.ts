@@ -5,7 +5,7 @@ export default class Apply {
   static alignHelper(
     targetInit: Sprite,
     referenceInit: Sprite,
-    typeInit: string
+    typeInit: string,
   ) {
     let scale;
     let ret = {};

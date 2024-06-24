@@ -5,7 +5,7 @@ export default class InvisibleButton extends Sprite {
     width: number,
     height: number,
     id: string,
-    test: boolean = false
+    test: boolean = false,
   ) {
     super(id);
     this.width = width;

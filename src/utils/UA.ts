@@ -2,7 +2,7 @@
 
 type Browser = {
   name: string;
-  version: number;
+  version?: number;
 };
 
 export default class UA {
@@ -18,8 +18,8 @@ export default class UA {
     // Let's allow this special function to have more complexity than normal
     /* jshint maxcomplexity:false */
     let os: string = "other";
-    let ver: number = 0;
-    let tmp: RegExpExecArray | null;
+    // let ver: number = 0;
+    // let tmp: RegExpExecArray | null;
     const userAgent: string = argUserAgent || navigator.userAgent.toString();
 
     if (/windows|win32/i.test(userAgent) && !/windows phone/i.test(userAgent)) {
@@ -28,19 +28,19 @@ export default class UA {
       os = "macintosh";
     } else if (/iphone|ipod|ipad/i.test(userAgent)) {
       os = "ios";
-      tmp = /OS ([0-9_]+)/i.exec(userAgent);
-      ver = this.getVersion(tmp);
+      // tmp = /OS ([0-9_]+)/i.exec(userAgent);
+      // ver = this.getVersion(tmp);
     } else if (/windows phone/i.test(userAgent)) {
       os = "Windows Phone";
-      tmp = /Windows Phone [OS]*\s*([0-9.]+)/.exec(userAgent);
-      ver = this.getVersion(tmp);
+      // tmp = /Windows Phone [OS]*\s*([0-9.]+)/.exec(userAgent);
+      // ver = this.getVersion(tmp);
     } else if (/android/i.test(userAgent)) {
       os = "android";
-      tmp = /Android\s*([0-9.]+)/.exec(userAgent);
-      if (!tmp) {
-        tmp = /Android;\s*([0-9.]+)/.exec(userAgent);
-      }
-      ver = this.getVersion(tmp);
+      // tmp = /Android\s*([0-9.]+)/.exec(userAgent);
+      // if (!tmp) {
+      //   tmp = /Android;\s*([0-9.]+)/.exec(userAgent);
+      // }
+      // ver = this.getVersion(tmp);
     } else if (/linux/i.test(userAgent)) {
       os = "linux";
     } else if (/webOS/i.test(userAgent)) {
@@ -53,7 +53,6 @@ export default class UA {
 
     return {
       name: os,
-      version: ver,
     };
   }
 

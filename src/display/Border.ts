@@ -1,4 +1,5 @@
 import Sprite from "./Sprite";
+import Create from "../utils/Create";
 
 type Config = {
   color: string;
@@ -18,7 +19,8 @@ export default class Border {
   config: Config;
   parent: Sprite | undefined;
   side: Side;
-  div: Side;
+  div: HTMLElement;
+  type: string = "border";
 
   constructor(configParam = {}) {
     const defaultConfig = {
@@ -27,7 +29,6 @@ export default class Border {
       id: "border",
       zIndex: 1000,
     };
-
     this.config = Object.assign(defaultConfig, configParam);
     this.parent = undefined;
     this.side = {
@@ -36,7 +37,6 @@ export default class Border {
       right: new Sprite(`${this.config.id}_right`),
       bottom: new Sprite(`${this.config.id}_bottom`),
     };
-    this.div = this.side;
 
     Object.entries(this.side).map(([, value]) => {
       const element = value;
@@ -50,11 +50,9 @@ export default class Border {
       height: "100%",
     };
     this.side.right.style = {
-      right: "0px",
       top: "0px",
       width: `${this.config.thickness}px`,
       height: "100%",
-      left: "",
     };
     this.side.top.style = {
       left: "0px",
@@ -64,11 +62,25 @@ export default class Border {
     };
     this.side.bottom.style = {
       left: "0px",
-      bottom: "0px",
       width: "100%",
       height: `${this.config.thickness}px`,
-      top: "",
     };
+    this.div = Create.div("border");
+
+    Object.entries(this.side).map(([, value]) => {
+      this.div.appendChild(value.div);
+    });
+  }
+
+  update(width: string, height: string) {
+    // this can only be called from Sprite
+    this.side.left.height = height;
+    this.side.top.width = width;
+    this.side.right.height = height;
+    this.side.bottom.width = width;
+
+    this.side.right.left = parseInt(width, 10) - this.config.thickness;
+    this.side.bottom.top = parseInt(height, 10) - this.config.thickness;
   }
 
   set color($color: string) {
@@ -94,20 +106,24 @@ export default class Border {
     return this.side.left.display;
   }
 
-  set thickness($thickness: number | string) {
-    let thickness = $thickness;
-    if (typeof $thickness === "number") {
-      thickness = `${$thickness}px`;
-    }
-    this.side.left.width = thickness;
-    this.side.right.width = thickness;
-    this.side.top.height = thickness;
-    this.side.bottom.height = thickness;
-  }
+  // set thickness($thickness: number | string) {
+  //   let thickness = $thickness;
 
-  get thickness(): string {
-    return this.side.left.width;
-  }
+  //   if (typeof $thickness === "number") {
+  //     this.config.thickness = $thickness;
+  //     thickness = `${$thickness}px`;
+  //   } else {
+  //     this.config.thickness = parseInt($thickness, 10);
+  //   }
+  //   this.side.left.width = thickness;
+  //   this.side.right.width = thickness;
+  //   this.side.top.height = thickness;
+  //   this.side.bottom.height = thickness;
+  // }
+
+  // get thickness(): string {
+  //   return this.side.left.width;
+  // }
   /*
   addToBody(thisWindow = { none: "none" }) {
     const win = Object.entries(thisWindow).length === 1 ? window : thisWindow;
