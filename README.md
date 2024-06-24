@@ -83,4 +83,4 @@ There's a couple things to note:
         </div>
 ```
 
-This is here because when using webpack to watch the public folder it renames all of the files or removes them from their folders. Also if you don't declare all of the files you're using in the localhoast then those files will not be avaiable.
+This is here because when using webpack to watch the public folder it renames all of the files or removes them from their folders. Also if you don't declare all of the files you're using in the localhoast then those files will not be available.
