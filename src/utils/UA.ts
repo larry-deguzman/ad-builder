@@ -6,6 +6,10 @@ type Browser = {
 };
 
 export default class UA {
+  /**
+   * @private
+   */
+  private constructor() {}
   static getVersion(result: string[] | null): number {
     let ver: number = 0;
     if (result && result[1]) {

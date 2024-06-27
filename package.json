@@ -1,5 +1,6 @@
 {
-  "name": "my-webpack-project",
+  "name": "building-blocks",
+  "nameLiteral": "Building Blocks",
   "version": "1.0.0",
   "description": "My webpack project",
   "main": "index.js",
@@ -10,7 +11,8 @@
     "webpack:prod": "npx webpack --mode=production",
     "unused": "npm run tsc:build && webpack serve --open --env=options=local --mode=development --config ./webpack.config.hotloader.js --stats-children && rm -r ./_temp",
     "build:dev": "rm -r ./dist && npm run tsc:build && npm run webpack:dev && rm -r ./_temp",
-    "build:prod": "rm -r ./dist && npm run tsc:build && npm run webpack:prod && rm -r ./_temp"
+    "build:prod": "rm -r ./dist && npm run tsc:build && npm run webpack:prod && rm -r ./_temp",
+    "typedoc": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -45,6 +47,7 @@
     "prettier": "^3.3.2",
     "terser-webpack-plugin": "^5.3.10",
     "tsconfig-paths": "^4.2.0",
+    "typedoc": "^0.26.2",
     "typescript": "^5.5.2",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",

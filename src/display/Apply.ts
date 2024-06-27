@@ -2,10 +2,15 @@ import Sprite from "./Sprite";
 import Align from "./Align";
 
 export default class Apply {
+  /**
+   *
+   * @private
+   */
+  private constructor() {}
   static alignHelper(
     targetInit: Sprite,
     referenceInit: Sprite,
-    typeInit: string,
+    typeInit: string
   ) {
     let scale;
     let ret = {};

@@ -1,6 +1,11 @@
 import Sprite from "./Sprite";
 
 export default class Remove {
+  /**
+   *
+   * @private
+   */
+  private constructor() {}
   static child(element: Sprite): void {
     element.storage.parent.removeChild(element);
   }

@@ -1,4 +1,8 @@
 export default class Align {
+  /**
+   * @private
+   */
+  private constuctor() {}
   static get CENTER(): string {
     return "center";
   }
