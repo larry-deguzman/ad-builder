@@ -4,7 +4,10 @@ type Position = {
 };
 
 export default class Detect {
-  constructor() {}
+  /**
+   * @private
+   */
+  private constructor() {}
   coordinates(event: {
     type: string | string[];
     originalEvent: { touches: any[]; changedTouches: any[] };

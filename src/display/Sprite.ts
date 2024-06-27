@@ -11,11 +11,29 @@ type Scale = {
   scaleY: number;
 };
 
-export default class Sprite {
+/**
+ * Class representing a Sprite.
+ */
+
+class Sprite {
   storage: any;
   div: HTMLElement;
   type: string = "sprite";
 
+  /**
+   *
+   * Sprite is a class that is used to create a div element that can be used as a sprite.
+   * @constructor
+   * @param $id This is the id of the Sprite and div element that will be created.
+   * @returns Sprite
+   *
+   * ```typescript
+   * const sprite = new Sprite("mySprite");
+   * sprite.x = 100;
+   * sprite.y = 100;
+   * ```
+   *
+   */
   constructor($id: string) {
     const transforms: { [key: string]: string } = {
       webkit: "webkitTransform",
@@ -443,3 +461,5 @@ export default class Sprite {
   //   return temp.join(" ").trim();
   // }
 }
+
+export default Sprite;

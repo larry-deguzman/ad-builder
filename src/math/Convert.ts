@@ -4,6 +4,11 @@
  */
 
 export default class Convert {
+  /**
+   *
+   * @private
+   */
+  private constructor() {}
   static degreesToRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
   }

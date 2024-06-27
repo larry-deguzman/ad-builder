@@ -9,6 +9,10 @@ type Pack = {
 };
 
 export default class Load {
+  /**
+   * @private
+   */
+  private constructor() {}
   static get imageRX(): [string, RegExp][] {
     return [
       ["image", RegExp("jpeg$", "i")],

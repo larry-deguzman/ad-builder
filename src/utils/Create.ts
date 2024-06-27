@@ -11,6 +11,11 @@ type Point = {
 };
 
 export default class Create {
+  /**
+   *
+   * @private
+   */
+  private constructor() {}
   static isElement(element: HTMLElement | null): boolean {
     if (typeof HTMLElement === "object") {
       return element instanceof HTMLElement;
@@ -28,13 +33,13 @@ export default class Create {
   }
 
   static element(
-    a: string,
+    a: string
   ): HTMLElement | HTMLIFrameElement | HTMLImageElement {
     return document.createElement(a);
   }
 
   static div(
-    $id: string = `act_us_${Math.random()}`.replace(".", "_"),
+    $id: string = `act_us_${Math.random()}`.replace(".", "_")
   ): HTMLDivElement {
     const id = $id;
     const mc = document.createElement("div");
@@ -68,7 +73,7 @@ export default class Create {
   static grid(
     bounds: GridProperties,
     cell: GridProperties,
-    bleed: boolean = false,
+    bleed: boolean = false
   ): ArrayPoint {
     const ret: ArrayPoint = [];
     const count = {

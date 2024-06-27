@@ -1,0 +1,9 @@
+{
+  // Comments are supported, like tsconfig.json
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "name": "Building Blocks",
+  "exclude": ["**/node_modules/**"],
+  "includeVersion": true
+}
